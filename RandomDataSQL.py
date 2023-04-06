@@ -32,90 +32,85 @@ def generar_fechas():
     mes = generar_numero(1, 12)
     dia = generar_numero(1, 30)
     if (mes<10):
-        mes = add_cero(mes)
+        mes = '0' + str(mes)
     if (dia<10):
-        dia = add_cero(dia)
-    return str(random.randint(1960, 2023)) + '' +  str(mes) + '' + str(dia)
+        dia = '0' + str(dia)
+    fecha = "'" + str(random.randint(1960, 2023)) + '/' + str(mes) + '/' + str(dia) + ' ' + generar_time(0) + "'"
+    return convertir_fecha_oracle(fecha)
 
-#Funcion generar time
-def generar_time():
+#Formato fecha oracle
+def convertir_fecha_oracle(fecha):
+    return "TO_DATE(" + fecha + ", 'YYYY/MM/DD HH24:MI:SS')"
+
+
+#Funcion generar time con comillas simples
+def generar_time(iden):
     hora = generar_numero(0, 23)
-    if (hora<10):
-        add_cero(hora)
+    if hora < 10:
+        hora = "0" + str(hora)
     minuto = generar_numero(0, 59)
-    if (minuto<10):
-        add_cero(minuto)
+    if minuto < 10:
+        minuto = "0" + str(minuto)
     segundo = generar_numero(0, 59)
-    if (segundo<10):
-        add_cero(segundo)
-    return str(hora) + '' + str(minuto) + '' + str(segundo)
+    if segundo < 10:
+        segundo = "0" + str(segundo)
+    if iden == 1:
+        time = "'" + str(hora) + ':' + str(minuto) + ':' + str(segundo) + "'"
+        return "TO_TIMESTAMP(" + time + ", 'HH24:MI:SS')"
+    else:
+        return str(hora) + ':' + str(minuto) + ':' + str(segundo)
 
-# Utilizo esta función para añadir un 0 en horas o fechas
-def add_cero(valor):
-    return '0' + str(valor)
 
 #Funcion enfermedad aleatoria
 def obtener_enfermedad():
-    enfermedades = ['Gripe', 'Neumonía', 'Bronquitis', 'Malaria', 'Sarampión', 'Varicela', 'Tuberculosis', 
-                    'VIH/SIDA', 'Cáncer', 'Fibrosis quística', 'Asma', 'Artritis', 'Enfermedad de Alzheimer', 
-                    'Parkinson', 'Epilepsia', 'Esquizofrenia', 'Depresión', 'Trastornos de ansiedad', 
-                    'Trastornos de la alimentación', 'Diabetes', 'Hipertensión', 'Enfermedades cardíacas', 
-                    'Accidente cerebrovascular', 'Enfermedad pulmonar obstructiva crónica (EPOC)', 'Enfermedad de Crohn', 
-                    'Colitis ulcerosa', 'Endometriosis', 'Síndrome del intestino irritable (SII)', 'Hepatitis B', 
-                    'Hepatitis C', 'Enfermedad renal crónica', 'Esclerosis múltiple', 'Fibromialgia', 
-                    'Lupus eritematoso sistémico', 'Psoriasis', 'Enfermedad de Lyme', 'Meningitis', 'Encefalitis', 
-                    'Fiebre del Nilo Occidental', 'Fiebre del Valle del Rift', 'Enfermedad de Chagas', 'Lepra', 
-                    'Elefantiasis', 'Dengue', 'Zika', 'Ébola']
+    enfermedades = ['GRIP', 'NEUM', 'BRON', 'MAL', 'SAR', 'VAR', 'TBC', 'VIH', 'CAC', 'FQ', 'ASMA', 'ART', 'EA', 'PKS', 
+                    'EPL', 'ESQ', 'DEP', 'TA', 'TAAL', 'DM', 'HTA', 'ECC', 'ACV', 'EPOC', 'ECR', 'CU', 'ENDO', 'SII', 
+                    'HB', 'HC', 'ERC', 'EM', 'FM', 'LES', 'PSO', 'ELY', 'MEN', 'ENC', 'FNO', 'FVR', 'ECH', 'LEP', 'ELE',
+                    'DEN', 'ZIK', 'EBO']
 
-    return random.choice(enfermedades)
+    return "'"+random.choice(enfermedades)+"'"
 
 #Funcion medicamento aleatorio
 def obtener_medicamento():
-    medicamentos = ['Paracetamol', 'Ibuprofeno', 'Aspirina', 'Omeprazol', 'Amoxicilina', 'Lorazepam', 'Diazepam', 
-                    'Atorvastatina', 'Rosuvastatina', 'Metformina', 'Insulina', 'Hidroclorotiazida', 'Losartán', 
-                    'Enalapril', 'Valsartán', 'Metoprolol', 'Amlodipino', 'Furosemida', 'Clopidogrel', 'Warfarina', 
-                    'Rivaroxabán', 'Apixabán', 'Metilfenidato', 'Alprazolam', 'Sertralina', 'Escitalopram', 
-                    'Venlafaxina', 'Tramadol', 'Morfina', 'Codeína', 'Hidromorfona', 'Oxicodona', 'Pregabalina', 
-                    'Gabapentina', 'Carbamazepina', 'Lamotrigina', 'Levetiracetam', 'Fenitoína', 'Fenobarbital', 
-                    'Levotiroxina', 'Liotironina', 'Estradiol', 'Progesterona', 'Testosterona', 'Finasterida', 
-                    'Tadalafilo', 'Sildenafilo', 'Ranitidina', 'Ciprofloxacino', 'Azitromicina', 'Clindamicina', 
-                    'Doxiciclina', 'Fluconazol', 'Ketoconazol', 'Eritromicina', 'Gentamicina', 'Vancomicina', 
-                    'Meropenem', 'Imipenem', 'Cefepima', 'Ceftriaxona', 'Cefotaxima', 'Ampicilina', 'Amikacina', 
-                    'Tobramicina']
-    return random.choice(medicamentos)
+    medicamentos = ['PCM', 'IBP', 'ASA', 'OME', 'AMX', 'LOR', 'DIA', 'ATV', 'RSV', 'MET', 'INS', 'HCTZ', 'LOS', 'ENA', 
+                    'VAL', 'METO', 'AML', 'FUR', 'CLO', 'WAR', 'RIV', 'API', 'MFD', 'ALP', 'SET', 'ESC', 'VEN', 'TRA', 
+                    'MOR', 'COD', 'HID', 'OXI', 'PGB', 'GAB', 'CAR', 'LAM', 'LEV', 'FEN', 'FBR', 'LVT', 'LTR', 'EST', 
+                    'PRO', 'TST', 'FIN', 'TAD', 'SIL', 'RAN', 'CIP', 'AZI', 'CLI', 'DOX', 'FLU', 'KET', 'ERM', 'GEN', 
+                    'VAN', 'MER', 'IMI', 'CEF', 'CTR', 'CFT', 'AMP', 'AMK', 'TOB']
+    return "'"+random.choice(medicamentos)+"'"
 
 #Funcion via administrativa
 def obtener_via_administracion():
-    vias_administracion = ['Oral', 'Sublingual', 'Intravenosa', 'Intramuscular', 'Subcutánea', 'Transdérmica', 'Inhalatoria', 'Rectal']
-    return random.choice(vias_administracion)
+    vias_administracion = ['Oral', 'Sublingual', 'Intrav', 'Intram', 'Subcutánea', 'Transd', 'Inha', 'Rectal']
+    return "'" + random.choice(vias_administracion) + "'"
 
 #Funcion presentacion
 def obtener_presentacion():
-    presentaciones = ['Cápsulas', 'Comprimidos', 'Píldoras', 'Líquido', 'Suspensión', 'Jarabe', 'Crema', 'Pomada']
-    return random.choice(presentaciones)
+    presentaciones = ['Cápsulas', 'Comp', 'Píldoras', 'Líquido', 'Susp', 'Jarabe', 'Crema', 'Pomada']
+    return "'" + random.choice(presentaciones)+"'"
 #Receta
 def obtener_receta():
-    recetas = ['1 comprimido cada 8 horas', '2 cápsulas al día', '5 ml cada 12 horas', '1 cucharada cada 6 horas', '1 gramo al día', '1 parche cada 24 horas']
-    return random.choice(recetas)
+    recetas = ['1 comp', '2 cáp', '5 ml', '1 cucharada', '1 gramo', '1 parche']
+    return "'"+random.choice(recetas)+"'"
 #Tipo
 def obtener_tipo_medicamento():
-    tipos = ['Analgesico', 'Antibiotico', 'Antiinflamatorio', 'Antihistaminico', 'Antidepresivo', 'Anticoagulante']
-    return random.choice(tipos)
+    tipos = ['Analgesico', 'Antibiotico', 'Antiinflam', 'Antihistam', 'Antidep', 'Anticoag']
+    return "'"+random.choice(tipos)+"'"
 
 #Descripcion efectos secundarios
 def obtener_efecto_secundario():
     efectos = ['Mareo', 'Náuseas', 'Vómitos', 'Dolor de cabeza', 'Somnolencia', 'Dolor de estómago']
-    return random.choice(efectos)
+    return "'"+random.choice(efectos)+"'"
 
 #Sintomas
 def obtener_sintoma():
     sintomas = ['Dolor de cabeza', 'Fiebre', 'Tos', 'Náuseas', 'Vómitos', 'Dolor de estómago']
-    return random.choice(sintomas)
+    return "'"+random.choice(sintomas)+"'"
 
 #ubicacion
 def obtener_ciudad():
     ciudades = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza', 'Málaga', 'Murcia', 'Palma', 'Las Palmas', 'Bilbao']
-    return random.choice(ciudades)
+    return "'"+random.choice(ciudades)+"'"
 
 ###### Comprobación de claves primarias
 
@@ -145,12 +140,12 @@ with open('datos.csv', 'w', encoding='ISO-8859-1', newline='') as file:
               'NO_FINAN_c_nacional']
     writer = csv.writer(file)
     writer.writerow(headers)
-    for i in range(1, 6):
+    for i in range(1, 2):
         P_SANIT_ID = generar_numero(0, 10000)
         if (check_csv_column('datos.csv', 'P_SANIT_ID', P_SANIT_ID)):
             P_SANIT_ID = generar_numero(0, 100)
         SANIT_TYPE = ['MEDICO', 'ENFERMERO']
-        P_SANIT_TYPE = SANIT_TYPE[generar_numero(0, 1)]
+        P_SANIT_TYPE = "'" + SANIT_TYPE[generar_numero(0, 1)] + "'"
         
         P_SANIT_P_SANIT_ID = P_SANIT_ID
         id_m = generar_numero(0, 100)
@@ -161,7 +156,7 @@ with open('datos.csv', 'w', encoding='ISO-8859-1', newline='') as file:
         turno = generar_boolean()
         
         fecha = generar_fechas()
-        hora = generar_time()
+        hora = generar_time(1)
         PACIENTE_dni = generar_numero(0, 99999999)
         CONSULTA_numero = generar_numero(0, 100)
         CONSULTA_planta = generar_numero(0, 10)
@@ -215,7 +210,7 @@ with open('datos.csv', 'w', encoding='ISO-8859-1', newline='') as file:
         
         familia_medicamento = MEDIC_TYPE
         
-        pvp = generar_numero(10, 10000)
+        pvp = generar_numero(10, 1000)
         pvl = round((generar_numero(0, 100) / 100) * pvp)
         n_licencia = generar_numero(10000, 1000000)
         if (check_csv_column('datos.csv', 'n_licencia', n_licencia)):
@@ -276,23 +271,24 @@ def escribir_a_txt(encabezados_pedidos, texto):
                 txtfile.write('\n')
 
 entidades_atributos = {}
+entidades_atributos['HISTORIAL_MEDICO'] = ['n_registro', 'fecha_inicio', 'fecha_cierre', 'PACIENTE_dni']
+entidades_atributos['PACIENTE'] = ['dni', 'nombre_pac', 'apellido', 'fecha_nacimiento', 'HISTORIAL_MEDICO_n_registro']
+entidades_atributos['P_SANIT'] = ['P_SANIT_ID', 'P_SANIT_TYPE']
+entidades_atributos['FARMACIA'] = ['n_licencia', 'ubicacion']
+entidades_atributos['MEDIC'] = ['c_nacional', 'nombre', 'via_administracion', 'presentacion', 'formato', 'receta', 'MEDIC_TYPE']
+entidades_atributos['FINAN'] = ['c_nacional', 'pvp', 'pvl']
+entidades_atributos['NO_FINAN'] = ['c_nacional']
+entidades_atributos['ENFDAD'] = ['cie10', 'cronica', 'nombre_enfdad', 'tasa_mortalidad', 'tasa_letalidad']
+
 entidades_atributos['CITA'] = ['fecha', 'hora', 'PACIENTE_dni', 'CONSULTA_numero', 'CONSULTA_planta', 'P_SANIT_P_SANIT_ID']
 entidades_atributos['CONSULTA'] = ['numero', 'planta', 'tamanio', 'aforo']
 entidades_atributos['EFEC_SECUN'] = ['descripcion', 'nivel_gravedad', 'frecuencia_aparicion', 'MEDIC_c_nacional']
 entidades_atributos['ENF_MEDIC'] = ['ENFDAD_cie10', 'MEDIC_c_nacional']
-entidades_atributos['ENFDAD'] = ['cie10', 'cronica', 'nombre_enfdad', 'tasa_mortalidad', 'tasa_letalidad']
 entidades_atributos['ENFERMERO'] = ['P_SANIT_P_SANIT_ID', 'codigo', 'turno']
 entidades_atributos['FAM_MEDIC'] = ['familia_medicamento', 'MEDIC_c_nacional']
 entidades_atributos['FARM_NO_FINAN'] = ['FARMACIA_n_licencia', 'NO_FINAN_c_nacional']
-entidades_atributos['FARMACIA'] = ['n_licencia', 'ubicacion']
-entidades_atributos['FINAN'] = ['c_nacional', 'pvp', 'pvl']
-entidades_atributos['HISTORIAL_MEDICO'] = ['n_registro', 'fecha_inicio', 'fecha_cierre', 'PACIENTE_dni']
-entidades_atributos['MEDIC'] = ['c_nacional', 'nombre', 'via_administracion', 'presentacion', 'formato', 'receta', 'MEDIC_TYPE']
 entidades_atributos['MEDICO'] = ['P_SANIT_P_SANIT_ID', 'id_m', 'especializacion', 'anios_trabajo']
-entidades_atributos['NO_FINAN'] = ['c_nacional']
-entidades_atributos['P_SANIT'] = ['P_SANIT_ID', 'P_SANIT_TYPE']
 entidades_atributos['PAC_ENF'] = ['PACIENTE_dni', 'ENFDAD_cie10', 'duracion']
-entidades_atributos['PACIENTE'] = ['dni', 'nombre_pac', 'apellido', 'fecha_nacimiento', 'HISTORIAL_MEDICO_n_registro']
 entidades_atributos['FAM_MEDIC'] = ['familia_medicamento', 'MEDIC_c_nacional']
 entidades_atributos['SINTOMAS'] = ['sintomas', 'ENFDAD_cie10']
 
