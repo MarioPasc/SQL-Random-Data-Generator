@@ -1,3 +1,8 @@
+# MARIO PASCUAL GONZÁLEZ
+# INGENIERÍA DE LA SALUD
+# CURSO 2022-2023
+# BASES DE DATOS
+
 import random
 import csv
 import pandas as pd
@@ -140,7 +145,7 @@ with open('datos.csv', 'w', encoding='ISO-8859-1', newline='') as file:
               'NO_FINAN_c_nacional']
     writer = csv.writer(file)
     writer.writerow(headers)
-    for i in range(1, 2):
+    for i in range(1, 50):
         P_SANIT_ID = generar_numero(0, 10000)
         if (check_csv_column('datos.csv', 'P_SANIT_ID', P_SANIT_ID)):
             P_SANIT_ID = generar_numero(0, 100)
@@ -254,15 +259,13 @@ for col in df.columns:
 output_file.close()
 
 # Funcion para generar las query's en SQL
-
 def escribir_a_txt(encabezados_pedidos, texto):
     # Abrir el archivo CSV
     with open('datos.csv', 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         # Abrir el archivo de texto para escribir los datos
-        with open('prueba1.txt', 'a') as txtfile:  # Cambiar modo de 'w' a 'a'
-
+        with open('prueba1.txt', 'a') as txtfile:  
             # Escribir cada fila
             for row in reader:
                 valores = [row[encabezado] for encabezado in encabezados_pedidos]
@@ -295,3 +298,56 @@ entidades_atributos['SINTOMAS'] = ['sintomas', 'ENFDAD_cie10']
 #Ahora se va iterando con la función sobre el diccionario creado con las entidades y los campos
 for texto, encabezados_pedidos in entidades_atributos.items():
     escribir_a_txt(encabezados_pedidos, texto)
+
+#Esta función va a comprobar si los atributos que son claves primarias no están repetidos en ningún momento
+
+def check_unique(csv_file, column_name):
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        column_values = []
+        for row in reader:
+            column_values.append(row[column_name])
+        if len(column_values) == len(set(column_values)):
+            print(f"All elements in column '{column_name}' are unique.")
+        else:
+            print(f"There are duplicate elements in column '{column_name}'.")
+
+# Ejemplo de uso
+check_unique('datos.csv', 'dni')
+check_unique('datos.csv', 'P_SANIT_ID')
+check_unique('datos.csv', 'ENFDAD_cie10')
+check_unique('datos.csv', 'MEDIC_c_nacional')
+
+
+def agregar_queries_inicio(fichero, table_names):
+    # Leer el contenido actual del archivo
+    with open(fichero, 'r') as f:
+        contenido_actual = f.read()
+
+    # Crear el contenido de las queries para desactivar las restricciones de cada tabla
+    contenido_nuevo = ''
+    for table_name in table_names:
+        disable_script = "BEGIN\n  FOR c IN (SELECT constraint_name, constraint_type FROM user_constraints WHERE table_name = "+ "'" + table_name + "'" + ") LOOP\n    EXECUTE IMMEDIATE 'ALTER TABLE " + table_name + " DISABLE CONSTRAINT ' || c.constraint_name; \n END LOOP; \nEND;"
+        contenido_nuevo += disable_script + "\n"
+
+    # Escribir el nuevo contenido al principio del archivo
+    with open(fichero, 'w') as f:
+        f.write(contenido_nuevo + contenido_actual)
+
+def agregar_queries_final(fichero, table_names):
+    # Crear el contenido de las queries para activar las restricciones de cada tabla
+    contenido_nuevo = ''
+    for table_name in table_names:
+        disable_script = "BEGIN\n  FOR c IN (SELECT constraint_name, constraint_type FROM user_constraints WHERE table_name = "+ "'" + table_name + "'" + ") LOOP\n    EXECUTE IMMEDIATE 'ALTER TABLE " + table_name + " ENABLE CONSTRAINT ' || c.constraint_name; \n END LOOP; \nEND;"
+        contenido_nuevo += disable_script + "\n"
+
+    # Escribir el nuevo contenido al final del archivo
+    with open(fichero, 'a') as f:
+        f.write(contenido_nuevo)
+
+
+table_names = ['FARM_NO_FINAN', 'PACIENTE', 'CITA', 'EFEC_SECUN', 'ENF_MEDIC', 'ENFERMERO', 'FAM_MEDIC', 
+               'FARMACIA', 'FINAN', 'HISTORIAL_MEDICO', 'MEDIC', 'PAC_ENF', 'P_SANIT', 'MEDICO', 'NO_FINAN', 
+               'SINTOMAS', 'CONSULTA']
+agregar_queries_inicio('prueba1.txt', table_names)
+agregar_queries_final('prueba1.txt', table_names)
